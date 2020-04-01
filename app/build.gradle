@@ -1,0 +1,47 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+    defaultConfig {
+        applicationId "com.devyk.ykcomponent"
+        minSdkVersion 15
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+
+        multiDexEnabled true
+
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    if (isModule) {
+        //对代码跟资源进行隔离
+//        runtimeOnly project(path: ':modulea')
+        runtimeOnly project(path: ':modulea')
+        runtimeOnly project(path: ':moduleb')
+    }
+
+    implementation project(path: ':componentlib')
+    api rootProject.ext.dependencies["arouter"]
+    annotationProcessor rootProject.ext.dependencies["arouter-compiler"]
+    api rootProject.ext.dependencies["multidex"]
+
+
+}
